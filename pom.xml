@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.vilin</groupId>
+  <artifactId>Java_King</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>Redis</module>
+    <module>JVM</module>
+  </modules>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>11</java.version>
+    <canal.version>1.1.7</canal.version>
+    <jedis.version>5.1.0</jedis.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.alibaba.otter</groupId>
+        <artifactId>canal.client</artifactId>
+        <version>${canal.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba.otter</groupId>
+        <artifactId>canal.protocol</artifactId>
+        <version>${canal.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>redis.clients</groupId>
+        <artifactId>jedis</artifactId>
+        <version>${jedis.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+
+</project>
