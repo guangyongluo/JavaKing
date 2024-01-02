@@ -11,6 +11,7 @@
   <modules>
     <module>Redis</module>
     <module>JVM</module>
+    <module>New_Feature</module>
   </modules>
 
   <properties>
