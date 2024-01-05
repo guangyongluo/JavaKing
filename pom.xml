@@ -19,12 +19,13 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <springboot.version>2.7.18</springboot.version>
     <slf4j.version>1.7.30</slf4j.version>
-    <lombok.version>1.18.22</lombok.version>
+    <lombok.version>1.18.30</lombok.version>
     <java.version>21</java.version>
     <canal.version>1.1.7</canal.version>
     <jedis.version>5.1.0</jedis.version>
     <springfox.version>3.0.0</springfox.version>
     <jol.version>0.17</jol.version>
+    <gson.version>2.10.1</gson.version>
   </properties>
 
   <dependencyManagement>
@@ -71,6 +72,11 @@
         <groupId>org.openjdk.jol</groupId>
         <artifactId>jol-core</artifactId>
         <version>${jol.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

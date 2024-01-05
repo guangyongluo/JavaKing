@@ -32,8 +32,10 @@ public class SwaggerConfiguration {
   @Bean
   public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(
       WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier,
-      ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes,
-      CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {
+      ControllerEndpointsSupplier controllerEndpointsSupplier,
+      EndpointMediaTypes endpointMediaTypes,
+      CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties,
+      Environment environment) {
     List<ExposableEndpoint<?>> allEndpoints = new ArrayList<>();
     Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
     allEndpoints.addAll(webEndpoints);
@@ -42,22 +44,25 @@ public class SwaggerConfiguration {
     String basePath = webEndpointProperties.getBasePath();
     EndpointMapping endpointMapping = new EndpointMapping(basePath);
     boolean shouldRegisterLinksMapping = webEndpointProperties.getDiscovery().isEnabled() &&
-        (org.springframework.util.StringUtils.hasText(basePath) || ManagementPortType.get(environment).equals(ManagementPortType.DIFFERENT));
-    return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes, corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath), shouldRegisterLinksMapping, null);
+        (org.springframework.util.StringUtils.hasText(basePath) || ManagementPortType.get(
+            environment).equals(ManagementPortType.DIFFERENT));
+    return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
+        corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath),
+        shouldRegisterLinksMapping, null);
   }
 
   @Bean
-  public Docket docket(){
+  public Docket docket() {
     Docket docket = new Docket(DocumentationType.OAS_30);
 
     return docket.apiInfo(createApiInfo())
         .select()
-        .apis(RequestHandlerSelectors.basePackage("com.vilin.hyperloglog.endpoint"))
-        .paths(PathSelectors.regex("/redis/.*"))
+        .apis(RequestHandlerSelectors.any())
+        .paths(PathSelectors.any())
         .build();
   }
 
-  private ApiInfo createApiInfo(){
+  private ApiInfo createApiInfo() {
     return new ApiInfoBuilder().title("Swagger Test")
         .description("api first configuration.")
         .contact(new Contact("Leo", "www.vilin.com", "guangyongluo@outlook.com"))
