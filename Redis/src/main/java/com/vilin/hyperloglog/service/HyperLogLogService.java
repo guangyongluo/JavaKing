@@ -1,5 +1,7 @@
 package com.vilin.hyperloglog.service;
 
+import static com.vilin.contants.RedisConstants.HYPERLOGLOG_KEY;
+
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.PostConstruct;
@@ -33,7 +35,7 @@ public class HyperLogLogService {
           throw new RuntimeException(e);
         }
 
-        redisTemplate.opsForHyperLogLog().add("hll", stringBuilder.toString());
+        redisTemplate.opsForHyperLogLog().add(HYPERLOGLOG_KEY, stringBuilder.toString());
 
         log.info("IP {} access web size.", stringBuilder.toString());
       }
@@ -41,7 +43,7 @@ public class HyperLogLogService {
   }
 
   public Long getPageUV(){
-    return redisTemplate.opsForHyperLogLog().size("hll");
+    return redisTemplate.opsForHyperLogLog().size(HYPERLOGLOG_KEY);
   }
 
 

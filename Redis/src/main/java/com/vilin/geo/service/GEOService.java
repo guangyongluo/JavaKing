@@ -1,6 +1,8 @@
 package com.vilin.geo.service;
 
 
+import static com.vilin.contants.RedisConstants.CITY_KEY;
+
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.data.geo.Circle;
@@ -14,8 +16,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GEOService {
-
-  private final static String CITY_KEY = "city:beijin";
 
   @Resource
   private RedisTemplate redisTemplate;
