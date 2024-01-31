@@ -12,6 +12,8 @@
     <module>Redis</module>
     <module>JVM</module>
     <module>New_Feature</module>
+    <module>Redis_Distributed_Lock1</module>
+    <module>Redis_Distributed_Lock2</module>
   </modules>
 
   <properties>
