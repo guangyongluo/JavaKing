@@ -8,4 +8,6 @@ public interface InventoryService {
 
   String reduceInventoryWithMutexLock();
 
+  String reduceInventoryWithReentrantLock();
+
 }

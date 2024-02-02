@@ -1,5 +1,6 @@
 package com.vilin.service.impl;
 
+import com.vilin.lock.RedisReentrantLock;
 import com.vilin.service.InventoryService;
 import java.util.Arrays;
 import java.util.UUID;
@@ -130,6 +131,35 @@ public class InventoryServiceImpl implements InventoryService {
       String luaScript = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end";
       stringRedisTemplate.execute(new DefaultRedisScript<>(luaScript, Boolean.class),
           Arrays.asList(DISTRIBUTED_LOCK), lockValue);
+    }
+
+    return message;
+  }
+
+  @Override
+  public String reduceInventoryWithReentrantLock() {
+    String message = "";
+
+    RedisReentrantLock lock = new RedisReentrantLock(stringRedisTemplate, DISTRIBUTED_LOCK, 30L);
+
+    lock.lock();
+
+    try{
+      final String inventory = stringRedisTemplate.opsForValue().get(INVENTORY_KEY);
+      int num = inventory == null ? 0 : Integer.parseInt(inventory);
+
+      stringRedisTemplate.opsForValue().set(INVENTORY_KEY, String.valueOf(--num));
+
+      message = "sales number " + num + " product by server " + port +"." ;
+
+      log.info(message);
+
+    }catch (Exception e) {
+      message = "parse inventory number failed";
+      log.info(message);
+      return message;
+    } finally {
+      lock.unlock();
     }
 
     return message;
