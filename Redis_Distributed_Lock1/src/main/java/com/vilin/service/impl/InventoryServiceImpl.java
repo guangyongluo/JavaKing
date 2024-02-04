@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -21,11 +23,14 @@ public class InventoryServiceImpl implements InventoryService {
 
   private final static String DISTRIBUTED_LOCK = "distributed_lock";
 
-  @Value("${server.port}")
-  private String port;
-
   @Resource
   private StringRedisTemplate stringRedisTemplate;
+
+  @Resource
+  private RedissonClient redissonClient;
+
+  @Value("${server.port}")
+  private String port;
 
   // JVM锁是不符合分布式要求的，使用nginx反向代理加上ApiFox压测后出现超卖的情况
   @Override
@@ -162,6 +167,38 @@ public class InventoryServiceImpl implements InventoryService {
       return message;
     } finally {
       lock.unlock();
+    }
+
+    return message;
+  }
+
+  @Override
+  public String reduceInventoryWithRedissonLock() {
+    String message = "";
+
+    final RLock lock = redissonClient.getLock(DISTRIBUTED_LOCK);
+
+    lock.lock();
+
+    try{
+      final String inventory = stringRedisTemplate.opsForValue().get(INVENTORY_KEY);
+
+      int num = inventory == null ? 0 : Integer.parseInt(inventory);
+
+      stringRedisTemplate.opsForValue().set(INVENTORY_KEY, String.valueOf(--num));
+
+      message = "sales number " + num + " product by server " + port +"." ;
+
+      log.info(message);
+
+    }catch (Exception e) {
+      message = "parse inventory number failed";
+      log.info(message);
+      return message;
+    } finally {
+      if(lock.isLocked() && lock.isHeldByCurrentThread()) {
+        lock.unlock();
+      }
     }
 
     return message;

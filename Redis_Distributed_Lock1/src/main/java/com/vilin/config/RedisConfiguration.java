@@ -3,6 +3,9 @@ package com.vilin.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
+import org.redisson.config.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -37,5 +40,15 @@ public class RedisConfiguration {
     redisTemplate.setHashValueSerializer(jsonRedisSerializer);
     redisTemplate.afterPropertiesSet();
     return redisTemplate;
+  }
+
+  @Bean
+  public RedissonClient redissonClient(){
+    Config config = new Config();
+    config.useSingleServer()
+        .setAddress("redis://127.0.0.1:6379")
+        .setDatabase(0)
+        .setPassword("123456");
+    return Redisson.create(config);
   }
 }

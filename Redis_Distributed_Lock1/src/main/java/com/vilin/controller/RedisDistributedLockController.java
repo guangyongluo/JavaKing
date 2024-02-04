@@ -32,4 +32,9 @@ public class RedisDistributedLockController {
   public String reduceInventoryWithReentrantLock(){
     return inventoryService.reduceInventoryWithReentrantLock();
   }
+
+  @GetMapping("/reduce/redisson/lock")
+  public String reduceInventoryWithRedissonLock(){
+    return inventoryService.reduceInventoryWithRedissonLock();
+  }
 }

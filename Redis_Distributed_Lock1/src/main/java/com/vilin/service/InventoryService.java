@@ -10,4 +10,6 @@ public interface InventoryService {
 
   String reduceInventoryWithReentrantLock();
 
+  String reduceInventoryWithRedissonLock();
+
 }
