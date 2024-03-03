@@ -11,7 +11,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,7 +23,13 @@ public class MultiThreadServer {
       ssc.bind(new InetSocketAddress(8888));
 
       ssc.register(serverSelector, SelectionKey.OP_ACCEPT);
-      Worker worker = new Worker("work-01");
+      Worker[] workers = new Worker[2];
+      for(int i = 0; i < workers.length; i++){
+        workers[i] = new Worker("work-" + i);
+      }
+
+      int index = 0;
+
       while (true) {
         serverSelector.select();
 
@@ -36,7 +41,7 @@ public class MultiThreadServer {
             SocketChannel sc = ssc.accept();
             sc.configureBlocking(false);
             log.debug("before worker register...");
-            worker.register(sc);
+            workers[index++ % workers.length].register(sc);
             log.debug("after worker register...");
           }
 
@@ -61,7 +66,7 @@ public class MultiThreadServer {
 
     private Boolean start = false;
 
-    private ConcurrentLinkedQueue<Runnable> queue;
+//    private ConcurrentLinkedQueue<Runnable> queue;
 
     public Worker(String name){
       this.name = name;
@@ -75,22 +80,23 @@ public class MultiThreadServer {
           log.error("can not open worker selector");
           throw new RuntimeException(e);
         }
-        queue = new ConcurrentLinkedQueue<>();
+//        queue = new ConcurrentLinkedQueue<>();
         worker = new Thread(this, name);
         worker.start();
         log.debug("start read worker task...");
         start = true;
       }
 
-      queue.add(() -> {
-        try {
-          sc.register(selector, SelectionKey.OP_READ);
-        } catch (ClosedChannelException e) {
-          throw new RuntimeException(e);
-        }
-      });
+//      queue.add(() -> {
+//        try {
+//          sc.register(selector, SelectionKey.OP_READ);
+//        } catch (ClosedChannelException e) {
+//          throw new RuntimeException(e);
+//        }
+//      });
 
       selector.wakeup();
+      sc.register(selector, SelectionKey.OP_READ);
     }
 
     @Override
@@ -98,11 +104,11 @@ public class MultiThreadServer {
       while(true) {
         log.debug("worker start to work...");
 
-        Runnable task = queue.poll();
-        if(task != null) {
-          log.debug("register sc to work selector...");
-          task.run();
-        }
+//        Runnable task = queue.poll();
+//        if(task != null) {
+//          log.debug("register sc to work selector...");
+//          task.run();
+//        }
 
         try {
           selector.select();
