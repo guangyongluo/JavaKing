@@ -14,7 +14,8 @@
     <module>New_Feature</module>
     <module>Redis_Distributed_Lock1</module>
     <module>Redis_Distributed_Lock2</module>
-    <module>Concurrency</module>
+    <module>Java_IO</module>
+    <module>JUC</module>
   </modules>
 
   <properties>
@@ -29,6 +30,7 @@
     <springfox.version>3.0.0</springfox.version>
     <jol.version>0.17</jol.version>
     <gson.version>2.10.1</gson.version>
+    <guava.version>33.0.0-jre</guava.version>
     <mybatis-plus.boot.version>3.5.5</mybatis-plus.boot.version>
     <mysql.version>8.0.33</mysql.version>
     <druid.starter.version>1.2.21</druid.starter.version>
@@ -36,6 +38,8 @@
     <guava.version>33.0.0-jre</guava.version>
     <mockito.version>5.10.0</mockito.version>
     <redisson.version>3.26.0</redisson.version>
+    <netty.version>4.1.107.Final</netty.version>
+    <logback.version>1.2.13</logback.version>
   </properties>
 
   <dependencyManagement>
@@ -89,6 +93,11 @@
         <version>${gson.version}</version>
       </dependency>
       <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.baomidou</groupId>
         <artifactId>mybatis-plus-boot-starter</artifactId>
         <version>${mybatis-plus.boot.version}</version>
@@ -110,14 +119,19 @@
         <version>${druid.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${guava.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.redisson</groupId>
         <artifactId>redisson</artifactId>
         <version>${redisson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
